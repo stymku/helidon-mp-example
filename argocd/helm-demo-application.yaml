@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: helm-demo
+spec:
+  destination:
+    name: ''
+    namespace: helm-demo
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: helidon-mp-guestbook
+    repoURL: 'https://github.com/stymku/helidon-mp-example.git'
+    targetRevision: HEAD
+    helm:
+      valueFiles:
+        - values.yaml
+  project: default
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
