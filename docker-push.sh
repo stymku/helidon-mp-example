@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-RELEASE_VERSION=0.0.7
+RELEASE_VERSION=0.0.8
 IMAGE_FULL_NAME=localhost:5000/helidon-mp-example-server:${RELEASE_VERSION}
 DOCKERFILE=Dockerfile
 
