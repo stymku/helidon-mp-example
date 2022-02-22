@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <groupId>io.helidon.applications</groupId>
+        <artifactId>helidon-mp</artifactId>
+        <version>2.4.0</version>
+        <relativePath/>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.oracle.hcgbu</groupId>
+    <artifactId>helidon-mp-example</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>helidon-mp-example-server</module>
+    </modules>
+    <name>Helidon MP Example Service</name>
+
+    <properties>
+        <hcgbu-maven-tiles.version>2.1.0</hcgbu-maven-tiles.version>
+        <tiles-maven-plugin.version>2.22</tiles-maven-plugin.version>
+    </properties>
+
+    <!-- tiles-maven-plugin forces to specify distributionManagement section -->
+    <distributionManagement>
+        <repository>
+            <id>hcgbu-release</id>
+            <name>HCGBU Release Repository</name>
+            <url>https://artifactory.oci.oraclecorp.com/hcgbu-release-maven-local/</url>
+        </repository>
+    </distributionManagement>
+
+</project>

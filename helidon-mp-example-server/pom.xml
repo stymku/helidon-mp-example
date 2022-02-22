@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <artifactId>helidon-mp-example</artifactId>
+        <groupId>com.oracle.hcgbu</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>helidon-mp-example-server</artifactId>
+
+    <properties>
+        <mainClass>com.oracle.hcgbu.example.Main</mainClass>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.helidon.microprofile.bundles</groupId>
+            <artifactId>helidon-microprofile</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.helidon.microprofile.server</groupId>
+            <artifactId>helidon-microprofile-server</artifactId>
+        </dependency>
+
+        <!-- Jandex is an indexing tool for Weld (the CDI implementation used by Helidon)
+             that helps speed up the boot time of an application. -->
+        <dependency>
+            <groupId>org.jboss</groupId>
+            <artifactId>jandex</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- JUL to SLF4J bridge (to see Helidon messages in SLF4J)-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jul-to-slf4j</artifactId>
+        </dependency>
+
+        <!-- Logback is a successor to the log4j project -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>jakarta.json</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.inject</groupId>
+            <artifactId>jakarta.inject-api</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.ws.rs</groupId>
+            <artifactId>jakarta.ws.rs-api</artifactId>
+            <scope>compile</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Preparing libs/ folder with all dependencies including transitive -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-libs</id>
+                        <configuration>
+                            <!-- Helidon parent pom defines excludeScope=test that is an invalid option since maven-dependency-plugin v3.2.0:
+                                   - https://issues.apache.org/jira/browse/MDEP-749
+                                   - https://github.com/apache/maven-dependency-plugin/commit/727c669350430a5d594af9355817c97a16343a7d -->
+                            <excludeScope combine.self="override"></excludeScope>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <configuration>
+                    <!-- Dependencies that are used implicitly -->
+                    <ignoredUnusedDeclaredDependencies combine.children="append">
+                        <!-- Java libraries for writing microservices -->
+                        <ignoredUnusedDeclaredDependency>io.helidon.microprofile.bundles:helidon-microprofile</ignoredUnusedDeclaredDependency>
+                        <!-- Logback is a successor to the log4j project -->
+                        <ignoredUnusedDeclaredDependency>ch.qos.logback:logback-classic</ignoredUnusedDeclaredDependency>
+                    </ignoredUnusedDeclaredDependencies>
+                </configuration>
+            </plugin>
+
+            <!-- Jandex is an indexing tool for Weld (the CDI implementation used by Helidon)
+            that helps speed up the boot time of an application. -->
+            <plugin>
+                <groupId>org.jboss.jandex</groupId>
+                <artifactId>jandex-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>make-index</id>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>io.repaint.maven</groupId>
+                <artifactId>tiles-maven-plugin</artifactId>
+                <version>${tiles-maven-plugin.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <tiles>
+                        <tile>com.oracle.hcgbu.maven.tiles:checkstyle-tile:${hcgbu-maven-tiles.version}</tile>
+                        <tile>com.oracle.hcgbu.maven.tiles:spotbugs-tile:${hcgbu-maven-tiles.version}</tile>
+                        <tile>com.oracle.hcgbu.maven.tiles:pmd-copy-paste-detector-tile:${hcgbu-maven-tiles.version}</tile>
+                        <tile>com.oracle.hcgbu.maven.tiles:dependency-analyzer-tile:${hcgbu-maven-tiles.version}</tile>
+                        <tile>com.oracle.hcgbu.maven.tiles:java-11-errorprone-tile:${hcgbu-maven-tiles.version}</tile>
+                        <tile>com.oracle.hcgbu.maven.tiles:surefire-tile:${hcgbu-maven-tiles.version}</tile>
+                        <tile>com.oracle.hcgbu.maven.tiles:failsafe-tile:${hcgbu-maven-tiles.version}</tile>
+                    </tiles>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
